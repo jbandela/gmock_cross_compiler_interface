@@ -12,19 +12,7 @@ struct mock:public Interface<mock<Interface>>{
 namespace cross_compiler_interface{
     	// size only
 
-    namespace detail{
-        template<class F>
-        struct gmock_cross_function_helper_base{};
 
-        template<class R, class... Parms>
-        struct gmock_cross_function_helper_base<R(Parms...)>
-        {
-
-
-
-        };
-
-    }
 	template<template<class> class Iface,template<class> class Other, int Id,class R, class... Parms>
 	struct cross_function<Iface<mock<Other>>,Id,R(Parms...)>
     {
@@ -36,12 +24,12 @@ namespace cross_compiler_interface{
 
     R operator()(Parms... p){
         f_.SetOwnerAndName(pthis_, typeid(*this).name());
-        f_.Invoke(p...);
+        return f_.Invoke(p...);
     }
-
-    ::testing::MockSpec<R(Parms...)>& operator()(const testing::Matcher<Parms>&... p){
+    template<class... T>
+    ::testing::MockSpec<R(Parms...)>& With(const T&... t){
         f_.RegisterOwner(pthis_);
-        return f_.With(p...);
+        return f_.With(t...);
     }
 	};
 

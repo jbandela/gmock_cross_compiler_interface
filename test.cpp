@@ -17,7 +17,8 @@ struct TestInterface:public cross_compiler_interface::define_interface<T>{
 TEST(Test1,Test1){
     mock<TestInterface> m;
     using testing::_;
-    CC_EXPECT_CALL(m,F1(_)).Times(1);
+    CC_EXPECT_CALL(m,F1.With(1)).Times(1);
+    m.F1(1);
 
 }
 
