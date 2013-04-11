@@ -151,3 +151,8 @@ namespace cross_compiler_interface{
 #define CC_GMOCK_EXPECT_CALL_IMPL_(obj, call) \
     ((obj).##call).InternalExpectedAt(__FILE__, __LINE__, #obj, #call)
 #define CC_EXPECT_CALL(obj,call) CC_GMOCK_EXPECT_CALL_IMPL_(obj, call)
+
+#define CC_GMOCK_ON_CALL_IMPL_(obj, call) \
+    ((obj).##call).InternalDefaultActionSetAt(__FILE__, __LINE__, \
+                                                    #obj, #call)
+#define CC_ON_CALL(obj, call) CC_GMOCK_ON_CALL_IMPL_(obj, call)

@@ -14,24 +14,30 @@ struct TestInterface:public cross_compiler_interface::define_interface_unknown<T
 >{
 
     cross_function<TestInterface,0,int(int)> F1;
+    cross_function<TestInterface,1,int(int)> F2;
 
-    TestInterface():F1(this){}
+    TestInterface():F1(this),F2(this){}
     
 
 };
 
-TEST(Test1,Test1){
+TEST(SimpleMockTests,Test1){
     using cross_compiler_interface::mock;
     using cross_compiler_interface::use_unknown;
     mock<TestInterface> m;
     CC_EXPECT_CALL(m,F1.With(1)).Times(1);
     CC_EXPECT_CALL(m,AddRef.With()).Times(1);
+
+    CC_ON_CALL(m,F2.With(testing::_)).WillByDefault(testing::Return(200));
+
     auto use = m.get_use_interface();
 
-    use_unknown<TestInterface> it(use,false);
+    use_unknown<TestInterface> it(use,true);
 
 
     use.F1(1);
+
+    ASSERT_EQ(200,use.F2(2));
 
 }
 
